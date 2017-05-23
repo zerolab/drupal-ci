@@ -48,11 +48,7 @@ ENV NGINX_DOCROOT="/var/www/html"
 RUN sed -i 's@%NGINX_SERVER_NAME%@'"${NGINX_SERVER_NAME}"'@' /etc/nginx/conf.d/*.conf
 RUN sed -i 's@%NGINX_DOCROOT%@'"${NGINX_DOCROOT}"'@' /etc/nginx/conf.d/*.conf
 
-EXPOSE 80
-
 STOPSIGNAL SIGQUIT
-
-CMD ["nginx", "-g", "daemon off;"]
 
 RUN apt-get update -y && apt-get -y install git curl unzip mariadb-client-10.0 \
     libjpeg62-turbo-dev libpng12-dev libpq-dev \
@@ -65,3 +61,7 @@ RUN apt-get update -y && apt-get -y install git curl unzip mariadb-client-10.0 \
 
 RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+EXPOSE 80 9000
+
+CMD nginx -g daemon off; php-fpm
