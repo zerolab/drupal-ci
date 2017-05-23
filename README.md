@@ -8,4 +8,4 @@ Docker image for running Drupal tests in a CI environment.
 
 | Version | Tags | Dockerfile |
 | --- | --- | --- |
-| latest | `latest` | [Dockerfile](https://github.com/zerolab/drupal-ci/blob/master/mainline/Dockerfile) |
+| latest | `latest` | [Dockerfile](https://github.com/zerolab/drupal-ci/blob/master/Dockerfile) |

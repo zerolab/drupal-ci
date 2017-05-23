@@ -6,7 +6,7 @@ ENV NGINX_VERSION 1.12.0-1~jessie
 ENV NJS_VERSION   1.12.0.0.1.10-1~jessie
 
 RUN apt-get update \
-  && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 \
+  && apt-get install --no-install-recommends --no-install-suggests -y gnupg-curl \
   && \
   NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
   found=''; \
@@ -20,7 +20,7 @@ RUN apt-get update \
     apt-key adv --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$NGINX_GPGKEY" && found=yes && break; \
   done; \
   test -z "$found" && echo >&2 "error: failed to fetch GPG key $NGINX_GPGKEY" && exit 1; \
-  apt-get remove --purge -y gnupg1 && apt-get -y --purge autoremove && rm -rf /var/lib/apt/lists/* \
+  apt-get remove --purge -y gnupg-curl && apt-get -y --purge autoremove && rm -rf /var/lib/apt/lists/* \
   && echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install --no-install-recommends --no-install-suggests -y \
@@ -54,9 +54,9 @@ STOPSIGNAL SIGQUIT
 
 CMD ["nginx", "-g", "daemon off;"]
 
-RUN apt-get update -y && apt-get -y install git unzip mariadb-client-10.0 libxml2-dev \
+RUN apt-get update -y && apt-get -y install git curl unzip mariadb-client-10.0 \
     libjpeg62-turbo-dev libpng12-dev libpq-dev \
-    libcurl4-openssl-dev libfreetype6-dev libxslt1-dev \
+    libcurl4-openssl-dev libfreetype6-dev libxslt1-dev libxml2-dev \
     && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
     && docker-php-ext-install dom gd hash json mbstring pdo_mysql zip xml \
     # Cleanup
@@ -65,5 +65,3 @@ RUN apt-get update -y && apt-get -y install git unzip mariadb-client-10.0 libxml
 
 RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN export PATH="$HOME/.composer/vendor/bin:$PATH"
-
-
