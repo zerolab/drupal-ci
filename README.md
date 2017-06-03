@@ -1,5 +1,5 @@
-Drupal CI
-=========
+Drupal CI: PHP
+==============
 
 Docker image for running Drupal tests in a CI environment.
 
@@ -8,4 +8,4 @@ Docker image for running Drupal tests in a CI environment.
 
 | Version | Tags | Dockerfile |
 | --- | --- | --- |
-| latest | `latest` | [Dockerfile](https://github.com/zerolab/drupal-ci/blob/master/Dockerfile) |
+| latest | `php` | [Dockerfile](https://github.com/zerolab/drupal-ci/blob/php/Dockerfile) |
