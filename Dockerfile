@@ -30,7 +30,6 @@ RUN apt-get update \
             nginx-module-image-filter=${NGINX_VERSION} \
             nginx-module-njs=${NJS_VERSION} \
             gettext-base \
-  && apt-get install --no-install-recommends --no-install-suggests -y supervisor \
   && rm -rf /var/lib/apt/lists/*
 
 # Forward request and error logs to docker log collector
@@ -53,22 +52,25 @@ RUN sed -i 's@%NGINX_DOCROOT%@'"${NGINX_DOCROOT}"'@' /etc/nginx/conf.d/*.conf
 STOPSIGNAL SIGQUIT
 
 # Install additional packages for MySQL/Drupal.
-RUN apt-get update -y && apt-get -y install git curl unzip mariadb-client-10.0 \
-    libjpeg62-turbo-dev libpng12-dev libpq-dev \
-    libcurl4-openssl-dev libfreetype6-dev libxslt1-dev libxml2-dev \
+RUN apt-get update \
+    && apt-get -y install git curl unzip mariadb-client-10.0 \
+       libjpeg62-turbo-dev libpng12-dev libpq-dev \
+       libcurl4-openssl-dev libfreetype6-dev libxslt1-dev libxml2-dev \
     && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
     && docker-php-ext-install dom gd hash json mbstring pdo_mysql zip xml \
     # Cleanup
-    && DEBIAN_FRONTEND=noninteractive apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN export PATH="$HOME/.composer/vendor/bin:$PATH"
+# Composer
+RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && export PATH="$HOME/.composer/vendor/bin:$PATH"
 
-# Configure supervisord
-RUN mkdir -p /var/log/supervisor
+# Install and configure supervisord
+RUN apt-get update \
+    && apt-get install --no-install-recommends --no-install-suggests -y supervisor \
+    && mkdir -p /var/log/supervisor
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 80 9000
 
-CMD ["/usr/bin/supervisord"]
+CMD ["service supervisor start"]
