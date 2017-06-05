@@ -15,12 +15,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Tweak config
-RUN echo 'memory_limit="512M"' > /usr/local/etc/php/conf.d/memory_limit.ini
-RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/test.ini
+RUN echo 'memory_limit="512M"' > /usr/local/etc/php/conf.d/memory_limit.ini \
+    && echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/test.ini
 
 # Composer
-RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN export PATH="$HOME/.composer/vendor/bin:$PATH"
+RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && export PATH="$HOME/.composer/vendor/bin:$PATH"
+
 RUN composer global require "hirak/prestissimo:^0.3"
 
 CMD ["php", "-a"]
