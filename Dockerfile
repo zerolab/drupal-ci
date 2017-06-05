@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.0
 
 MAINTAINER Dan Braghis <dan@zerolab.org>
 
@@ -15,7 +15,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Tweak config
-RUN echo 'memory_limit="256M"' > /usr/local/etc/php/conf.d/memory_limit.ini
+RUN echo 'memory_limit="512M"' > /usr/local/etc/php/conf.d/memory_limit.ini
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/test.ini
 
 # Composer
@@ -23,6 +23,4 @@ RUN curl -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/
 RUN export PATH="$HOME/.composer/vendor/bin:$PATH"
 RUN composer global require "hirak/prestissimo:^0.3"
 
-EXPOSE 9000
-
-CMD ["php-fpm"]
+CMD ["php", "-a"]
