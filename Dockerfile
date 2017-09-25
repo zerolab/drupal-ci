@@ -8,7 +8,7 @@ RUN apt-get update -y \
        libjpeg62-turbo-dev libpng12-dev libpq-dev \
        libcurl4-openssl-dev libfreetype6-dev libxslt1-dev libxml2-dev \
     && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-    && docker-php-ext-install dom gd hash json mbstring pdo_mysql zip xml
+    && docker-php-ext-install dom gd hash json mbstring pdo_mysql zip xml bcmath
 
 # Cleanup
 RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
